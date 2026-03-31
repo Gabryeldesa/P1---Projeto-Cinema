@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cinema - Filmes</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+</head>
+<body class="bg-dark text-white">
+<div class="container-fluid">
+
+    <ul class="nav bg-dark border-bottom border-secondary mb-4">
+        <li class="nav-item"><a href="./cinema.html" class="nav-link text-white">Cinema</a></li>
+        <li class="nav-item"><a href="./filmes.html" class="nav-link text-white fw-bold">Filmes</a></li>
+        <li class="nav-item"><a href="./salas.html" class="nav-link text-white">Salas</a></li>
+        <li class="nav-item"><a href="./sessoes.html" class="nav-link text-white">Sessões</a></li>
+        <li class="nav-item"><a href="./ingressos.html" class="nav-link text-white">Ingressos</a></li>
+        <li class="nav-item"><a href="./sessoes-disponiveis.html" class="nav-link text-white">Sessões Disponíveis</a></li>
+    </ul>
+
+    <h3>Filmes</h3>
+    <hr>
+
+    <div id="alerta-filmes" class="alert d-none" role="alert"></div>
+
+    <div class="row g-4">
+
+        <div class="col-lg-5">
+            <div class="card bg-secondary text-white">
+                <div class="card-header fw-bold">Cadastrar Filme</div>
+                <div class="card-body">
+
+                    <div class="mb-3">
+                        <label for="filme-titulo" class="form-label">Título *</label>
+                        <input type="text" id="filme-titulo" class="form-control" placeholder="Ex: Oppenheimer">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="filme-genero" class="form-label">Gênero(s) *</label>
+                        <input type="text" id="filme-genero" class="form-control" placeholder="Ex: Ação, Aventura">
+                        <div class="form-text text-light opacity-50">Separe múltiplos gêneros por vírgula.</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="filme-descricao" class="form-label">Descrição</label>
+                        <textarea id="filme-descricao" class="form-control" rows="3" placeholder="Sinopse do filme..."></textarea>
+                    </div>
+
+                    <div class="row g-2 mb-3">
+                        <div class="col-6">
+                            <label for="filme-classificacao" class="form-label">Classificação *</label>
+                            <select id="filme-classificacao" class="form-select">
+                                <option value="">Selecione</option>
+                                <option>Livre</option>
+                                <option>10 anos</option>
+                                <option>12 anos</option>
+                                <option>14 anos</option>
+                                <option>16 anos</option>
+                                <option>18 anos</option>
+                            </select>
+                        </div>
+                        <div class="col-6">
+                            <label for="filme-duracao" class="form-label">Duração (min) *</label>
+                            <input type="number" id="filme-duracao" class="form-control" placeholder="Ex: 152" min="1">
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="filme-estreia" class="form-label">Data de Estreia</label>
+                        <input type="date" id="filme-estreia" class="form-control">
+                    </div>
+
+                    <button type="button" class="btn btn-primary w-100" onclick="salvarFilme()">Salvar Filme</button>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-7">
+            <div class="card bg-secondary text-white">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <span class="fw-bold">Filmes Cadastrados</span>
+                    <span class="badge bg-primary" id="filmes-count">0</span>
+                </div>
+                <div class="card-body p-0">
+                    <div id="lista-filmes" style="max-height:480px;overflow-y:auto;">
+                        <p class="text-center text-muted p-4">Nenhum filme cadastrado.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+<script src="./js/popper.min.js"></script>
+<script src="./js/bootstrap.min.js"></script>
+<script src="./js/app.js"></script>
+</body>
+</html>

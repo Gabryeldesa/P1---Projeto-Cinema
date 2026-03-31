@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cinema</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+</head>
+
+<body class="bg-dark text-white">
+
+    <div class="container-fluid">
+
+        <!-- NAVBAR -->
+        <ul class="nav navbar-cinema bg-dark">
+            <li class="nav-item"><a href="./cinema.html" class="nav-link ativo">Cinema</a></li>
+            <li class="nav-item"><a href="./filmes.html" class="nav-link">Filmes</a></li>
+            <li class="nav-item"><a href="./salas.html" class="nav-link">Salas</a></li>
+            <li class="nav-item"><a href="./sessoes.html" class="nav-link">Sessões</a></li>
+            <li class="nav-item"><a href="./ingressos.html" class="nav-link">Ingressos</a></li>
+            <li class="nav-item"><a href="./sessoes-disponiveis.html" class="nav-link">Sessões Disponíveis</a></li>
+        </ul>
+
+        <h3>Cinema</h3>
+        <hr>
+
+        <!-- CARDS DE NAVEGAÇÃO -->
+        <div class="row g-3 mt-2">
+
+            <div class="col-md-6 col-lg-3">
+                <div class="card bg-secondary text-white h-100">
+                    <div class="card-body text-center">
+                        <div style="font-size:2.5rem;">🎬</div>
+                        <h5 class="card-title mt-2">Filmes</h5>
+                        <p class="card-text small">Cadastre e gerencie os filmes em cartaz.</p>
+                        <div class="fs-4 fw-bold mb-2" id="count-filmes">—</div>
+                        <a href="./filmes.html" class="btn btn-primary btn-sm">Acessar</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-3">
+                <div class="card bg-secondary text-white h-100">
+                    <div class="card-body text-center">
+                        <div style="font-size:2.5rem;">🏛️</div>
+                        <h5 class="card-title mt-2">Salas</h5>
+                        <p class="card-text small">Cadastre as salas com capacidade e tipo.</p>
+                        <div class="fs-4 fw-bold mb-2" id="count-salas">—</div>
+                        <a href="./salas.html" class="btn btn-primary btn-sm">Acessar</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-3">
+                <div class="card bg-secondary text-white h-100">
+                    <div class="card-body text-center">
+                        <div style="font-size:2.5rem;">📅</div>
+                        <h5 class="card-title mt-2">Sessões</h5>
+                        <p class="card-text small">Programe sessões vinculando filmes e salas.</p>
+                        <div class="fs-4 fw-bold mb-2" id="count-sessoes">—</div>
+                        <a href="./sessoes.html" class="btn btn-primary btn-sm">Acessar</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-3">
+                <div class="card bg-secondary text-white h-100">
+                    <div class="card-body text-center">
+                        <div style="font-size:2.5rem;">🎟️</div>
+                        <h5 class="card-title mt-2">Ingressos</h5>
+                        <p class="card-text small">Registre a venda de ingressos por sessão.</p>
+                        <div class="fs-4 fw-bold mb-2" id="count-ingressos">—</div>
+                        <a href="./ingressos.html" class="btn btn-primary btn-sm">Acessar</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-3">
+                <div class="card bg-secondary text-white h-100">
+                    <div class="card-body text-center">
+                        <div style="font-size:2.5rem;">🍿</div>
+                        <h5 class="card-title mt-2">Sessões Disponíveis</h5>
+                        <p class="card-text small">Veja as sessões abertas para compra de ingressos.</p>
+                        <a href="./sessoes-disponiveis.html" class="btn btn-primary btn-sm mt-3">Acessar</a>
+                    </div>
+                </div>
+            </div>
+
+        </div><!-- /row -->
+
+        <!-- TABELA DE SESSÕES NA HOME -->
+        <div class="mt-5">
+            <h5>📅 Próximas Sessões</h5>
+            <hr>
+            <div class="card bg-secondary text-white">
+                <div class="card-body p-0">
+                    <div id="lista-sessoes-home">
+                        <p class="text-center text-muted p-4">Nenhuma sessão cadastrada.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div><!-- /container -->
+
+    <script src="./js/popper.min.js"></script>
+    <script src="./js/bootstrap.min.js"></script>
+    <script src="./js/app.js"></script>
+</body>
+
+</html>
