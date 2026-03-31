@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cinema - Sessões</title>
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+</head>
+
+<body class="bg-dark text-white">
+
+    <div class="container-fluid">
+
+        <!-- NAVBAR -->
+        <ul class="nav navbar-cinema bg-dark">
+            <li class="nav-item"><a href="./cinema.html" class="nav-link">Cinema</a></li>
+            <li class="nav-item"><a href="./filmes.html" class="nav-link">Filmes</a></li>
+            <li class="nav-item"><a href="./salas.html" class="nav-link">Salas</a></li>
+            <li class="nav-item"><a href="./sessoes.html" class="nav-link ativo">Sessões</a></li>
+            <li class="nav-item"><a href="./ingressos.html" class="nav-link">Ingressos</a></li>
+            <li class="nav-item"><a href="./sessoes-disponiveis.html" class="nav-link">Sessões Disponíveis</a></li>
+        </ul>
+
+        <h3>Sessões</h3>
+        <hr>
+
+        <!-- ALERTA -->
+        <div id="alerta-sessoes" class="alert d-none" role="alert"></div>
+
+        <div class="row g-4">
+
+            <!-- FORMULÁRIO -->
+            <div class="col-lg-5">
+                <div class="card bg-secondary text-white">
+                    <div class="card-header fw-bold">Cadastrar Sessão</div>
+                    <div class="card-body">
+
+                        <input type="hidden" id="sessao-id">
+
+                        <div class="mb-3">
+                            <label for="sessao-filme" class="form-label">Filme *</label>
+                            <select id="sessao-filme" class="form-select">
+                                <option value="">Selecione um filme</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="sessao-sala" class="form-label">Sala *</label>
+                            <select id="sessao-sala" class="form-select">
+                                <option value="">Selecione uma sala</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="sessao-datahora" class="form-label">Data e Hora *</label>
+                            <input type="datetime-local" id="sessao-datahora" class="form-control">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="sessao-preco" class="form-label">Preço (R$) *</label>
+                            <input type="number" id="sessao-preco" class="form-control" placeholder="Ex: 35.00"
+                                min="0" step="0.01">
+                        </div>
+
+                        <div class="row g-2 mb-3">
+                            <div class="col-6">
+                                <label for="sessao-idioma" class="form-label">Idioma *</label>
+                                <select id="sessao-idioma" class="form-select">
+                                    <option value="">Selecione</option>
+                                    <option>Dublado</option>
+                                    <option>Legendado</option>
+                                </select>
+                            </div>
+                            <div class="col-6">
+                                <label for="sessao-formato" class="form-label">Formato *</label>
+                                <select id="sessao-formato" class="form-select">
+                                    <option value="">Selecione</option>
+                                    <option>2D</option>
+                                    <option>3D</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <button class="btn btn-primary w-100" onclick="salvarSessao()">Salvar Sessão</button>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- LISTAGEM -->
+            <div class="col-lg-7">
+                <div class="card bg-secondary text-white">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <span class="fw-bold">Sessões Cadastradas</span>
+                        <span class="badge bg-primary" id="sessoes-count">0</span>
+                    </div>
+                    <div class="card-body p-0">
+                        <div id="lista-sessoes" style="max-height: 480px; overflow-y: auto;">
+                            <p class="text-center text-muted p-4">Nenhuma sessão cadastrada.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div><!-- /row -->
+
+    </div><!-- /container -->
+
+    <script src="../js/popper.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script src="../js/app.js"></script>
+</body>
+
+</html>

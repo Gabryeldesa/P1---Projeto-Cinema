@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cinema - Salas</title>
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+</head>
+
+<body class="bg-dark text-white">
+
+    <div class="container-fluid">
+
+        <!-- NAVBAR -->
+        <ul class="nav navbar-cinema bg-dark">
+            <li class="nav-item"><a href="./cinema.html" class="nav-link">Cinema</a></li>
+            <li class="nav-item"><a href="./filmes.html" class="nav-link">Filmes</a></li>
+            <li class="nav-item"><a href="./salas.html" class="nav-link ativo">Salas</a></li>
+            <li class="nav-item"><a href="./sessoes.html" class="nav-link">Sessões</a></li>
+            <li class="nav-item"><a href="./ingressos.html" class="nav-link">Ingressos</a></li>
+            <li class="nav-item"><a href="./sessoes-disponiveis.html" class="nav-link">Sessões Disponíveis</a></li>
+        </ul>
+
+        <h3>Salas</h3>
+        <hr>
+
+        <!-- ALERTA -->
+        <div id="alerta-salas" class="alert d-none" role="alert"></div>
+
+        <div class="row g-4">
+
+            <!-- FORMULÁRIO -->
+            <div class="col-lg-4">
+                <div class="card bg-secondary text-white">
+                    <div class="card-header fw-bold">Cadastrar Sala</div>
+                    <div class="card-body">
+
+                        <input type="hidden" id="sala-id">
+
+                        <div class="mb-3">
+                            <label for="sala-nome" class="form-label">Nome da Sala *</label>
+                            <input type="text" id="sala-nome" class="form-control" placeholder="Ex: Sala 1">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="sala-capacidade" class="form-label">Capacidade *</label>
+                            <input type="number" id="sala-capacidade" class="form-control" placeholder="Ex: 120" min="1">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="sala-tipo" class="form-label">Tipo *</label>
+                            <select id="sala-tipo" class="form-select">
+                                <option value="">Selecione</option>
+                                <option>2D</option>
+                                <option>3D</option>
+                                <option>IMAX</option>
+                            </select>
+                        </div>
+
+                        <button class="btn btn-primary w-100" onclick="salvarSala()">Salvar Sala</button>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- LISTAGEM -->
+            <div class="col-lg-8">
+                <div class="card bg-secondary text-white">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <span class="fw-bold">Salas Cadastradas</span>
+                        <span class="badge bg-primary" id="salas-count">0</span>
+                    </div>
+                    <div class="card-body p-0">
+                        <div id="lista-salas" style="max-height: 480px; overflow-y: auto;">
+                            <p class="text-center text-muted p-4">Nenhuma sala cadastrada.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div><!-- /row -->
+
+    </div><!-- /container -->
+
+    <script src="../js/popper.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script src="../js/app.js"></script>
+</body>
+
+</html>

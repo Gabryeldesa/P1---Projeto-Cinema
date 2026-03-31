@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cinema - Ingressos</title>
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+</head>
+
+<body class="bg-dark text-white">
+
+    <div class="container-fluid">
+
+        <!-- NAVBAR -->
+        <ul class="nav navbar-cinema bg-dark">
+            <li class="nav-item"><a href="./cinema.html" class="nav-link">Cinema</a></li>
+            <li class="nav-item"><a href="./filmes.html" class="nav-link">Filmes</a></li>
+            <li class="nav-item"><a href="./salas.html" class="nav-link">Salas</a></li>
+            <li class="nav-item"><a href="./sessoes.html" class="nav-link">Sessões</a></li>
+            <li class="nav-item"><a href="./ingressos.html" class="nav-link ativo">Ingressos</a></li>
+            <li class="nav-item"><a href="./sessoes-disponiveis.html" class="nav-link">Sessões Disponíveis</a></li>
+        </ul>
+
+        <h3>Ingressos</h3>
+        <hr>
+
+        <!-- ALERTA -->
+        <div id="alerta-ingressos" class="alert d-none" role="alert"></div>
+
+        <div class="row g-4">
+
+            <!-- FORMULÁRIO DE VENDA -->
+            <div class="col-lg-5">
+                <div class="card bg-secondary text-white">
+                    <div class="card-header fw-bold">Venda de Ingresso</div>
+                    <div class="card-body">
+
+                        <input type="hidden" id="ingresso-id">
+
+                        <div class="mb-3">
+                            <label for="ingresso-sessao" class="form-label">Sessão *</label>
+                            <select id="ingresso-sessao" class="form-select" onchange="onSessaoChange()">
+                                <option value="">Selecione uma sessão</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="ingresso-nome" class="form-label">Nome do Cliente *</label>
+                            <input type="text" id="ingresso-nome" class="form-control" placeholder="Nome completo">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="ingresso-cpf" class="form-label">CPF *</label>
+                            <input type="text" id="ingresso-cpf" class="form-control" placeholder="000.000.000-00"
+                                maxlength="14" oninput="mascaraCPF(this)">
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Tipo de Ingresso *</label>
+                            <div class="d-flex gap-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="ingresso-tipo" id="tipo-inteira" value="Inteira" checked>
+                                    <label class="form-check-label" for="tipo-inteira">Inteira</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="ingresso-tipo" id="tipo-meia" value="Meia">
+                                    <label class="form-check-label" for="tipo-meia">Meia-entrada</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="ingresso-assento" class="form-label">Assento *</label>
+                            <input type="text" id="ingresso-assento" class="form-control"
+                                placeholder="Ex: A10">
+                            <div class="form-text text-light opacity-50">Digite a letra da fileira seguida do número (ex: A10, B5).</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="ingresso-pagamento" class="form-label">Tipo de Pagamento *</label>
+                            <select id="ingresso-pagamento" class="form-select">
+                                <option value="">Selecione</option>
+                                <option>Cartão</option>
+                                <option>Pix</option>
+                                <option>Dinheiro</option>
+                            </select>
+                        </div>
+
+                        <button class="btn btn-success w-100" onclick="salvarIngresso()">Confirmar Venda</button>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- INGRESSOS VENDIDOS -->
+            <div class="col-lg-7">
+                <div class="card bg-secondary text-white">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <span class="fw-bold">Ingressos Vendidos</span>
+                        <span class="badge bg-primary" id="ingressos-count">0</span>
+                    </div>
+                    <div class="card-body p-0">
+                        <div id="lista-ingressos" style="max-height: 560px; overflow-y: auto;">
+                            <p class="text-center text-muted p-3">Nenhum ingresso vendido.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div><!-- /row -->
+
+    </div><!-- /container -->
+
+    <script src="../js/popper.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script src="../js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cinema - Sessões Disponíveis</title>
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+</head>
+
+<body class="bg-dark text-white">
+
+    <div class="container-fluid">
+
+        <!-- NAVBAR -->
+        <ul class="nav navbar-cinema bg-dark">
+            <li class="nav-item"><a href="./cinema.html" class="nav-link">Cinema</a></li>
+            <li class="nav-item"><a href="./filmes.html" class="nav-link">Filmes</a></li>
+            <li class="nav-item"><a href="./salas.html" class="nav-link">Salas</a></li>
+            <li class="nav-item"><a href="./sessoes.html" class="nav-link">Sessões</a></li>
+            <li class="nav-item"><a href="./ingressos.html" class="nav-link">Ingressos</a></li>
+            <li class="nav-item"><a href="./sessoes-disponiveis.html" class="nav-link ativo">Sessões Disponíveis</a></li>
+        </ul>
+
+        <h3>🎟️ Sessões Disponíveis</h3>
+        <hr>
+
+        <!-- SPINNER -->
+        <div id="spinner-filmes" class="text-center py-4">
+            <div class="spinner-border text-primary" role="status"></div>
+            <p class="mt-2 text-muted small">Carregando cartaz...</p>
+        </div>
+
+        <!-- GRID DE CARDS -->
+        <div id="lista-sessoes-disp" class="row g-4">
+            <p class="text-center text-muted p-4">Nenhuma sessão disponível.</p>
+        </div>
+
+    </div><!-- /container -->
+
+    <script src="../js/popper.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script src="../js/app.js"></script>
+</body>
+
+</html>
