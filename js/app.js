@@ -3,9 +3,9 @@ const POSTERS = {
     // 'Título do Filme': 'img/nome-do-arquivo.jpg',
 };
 
-
 // ── UTILITÁRIOS ──────────────────────────────────────────────
 
+// Função para exibir alertas temporários na interface
 function mostrarAlerta(idAlerta, mensagem, tipo) {
     const el = document.getElementById(idAlerta);
     if (!el) return;
@@ -14,20 +14,24 @@ function mostrarAlerta(idAlerta, mensagem, tipo) {
     setTimeout(() => { el.className = 'alert d-none'; }, 3500);
 }
 
+// Gera um ID único baseado no timestamp e um número aleatório
 function gerarId() {
     return Date.now().toString() + Math.floor(Math.random() * 1000).toString();
 }
 
+// Formata data e hora para exibição em português brasileiro
 function formatarDataHora(dt) {
     if (!dt) return '—';
     const d = new Date(dt);
     return d.toLocaleDateString('pt-BR') + ' ' + d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
 }
 
+// Formata valores monetários em reais brasileiros
 function formatarMoeda(v) {
     return Number(v).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 }
 
+// Aplica máscara de CPF no campo de entrada
 function mascaraCPF(input) {
     let v = input.value.replace(/\D/g, '').substring(0, 11);
     if (v.length > 9)      v = v.replace(/^(\d{3})(\d{3})(\d{3})(\d{0,2})/, '$1.$2.$3-$4');
@@ -41,7 +45,9 @@ function mascaraCPF(input) {
 //  FILMES — chave localStorage: 'filmes'
 // ============================================================
 
+// Salva um novo filme ou edita um existente baseado no campo 'filme-id'
 function salvarFilme() {
+    const id            = document.getElementById('filme-id').value;
     const titulo        = document.getElementById('filme-titulo').value.trim();
     const genero        = document.getElementById('filme-genero').value.trim();
     const descricao     = document.getElementById('filme-descricao').value.trim();
@@ -49,29 +55,42 @@ function salvarFilme() {
     const duracao       = document.getElementById('filme-duracao').value;
     const estreia       = document.getElementById('filme-estreia').value;
 
+    // Validações dos campos obrigatórios
     if (!titulo)                          { mostrarAlerta('alerta-filmes', 'Informe o título do filme.', 'danger'); return; }
     if (!genero)                          { mostrarAlerta('alerta-filmes', 'Informe o gênero do filme.', 'danger'); return; }
     if (!classificacao)                   { mostrarAlerta('alerta-filmes', 'Selecione a classificação.', 'danger'); return; }
     if (!duracao || Number(duracao) <= 0) { mostrarAlerta('alerta-filmes', 'Informe a duração em minutos.', 'danger'); return; }
 
     const filmes = JSON.parse(localStorage.getItem('filmes') || '[]');
-    filmes.push({
-        id: gerarId(),
-        titulo,
-        genero,
-        descricao,
-        classificacao,
-        duracao: Number(duracao),
-        estreia
-    });
+    if (id) {
+        // Editar filme existente
+        const index = filmes.findIndex(f => f.id === id);
+        if (index !== -1) {
+            filmes[index] = { id, titulo, genero, descricao, classificacao, duracao: Number(duracao), estreia };
+            mostrarAlerta('alerta-filmes', 'Filme "' + titulo + '" atualizado com sucesso!', 'success');
+        }
+    } else {
+        // Adicionar novo filme
+        filmes.push({
+            id: gerarId(),
+            titulo,
+            genero,
+            descricao,
+            classificacao,
+            duracao: Number(duracao),
+            estreia
+        });
+        mostrarAlerta('alerta-filmes', 'Filme "' + titulo + '" salvo com sucesso!', 'success');
+    }
     localStorage.setItem('filmes', JSON.stringify(filmes));
 
-    mostrarAlerta('alerta-filmes', 'Filme "' + titulo + '" salvo com sucesso!', 'success');
     limparFormFilme();
     renderFilmes();
 }
 
+// Limpa todos os campos do formulário de filmes
 function limparFormFilme() {
+    document.getElementById('filme-id').value           = '';
     document.getElementById('filme-titulo').value        = '';
     document.getElementById('filme-genero').value        = '';
     document.getElementById('filme-descricao').value     = '';
@@ -80,6 +99,22 @@ function limparFormFilme() {
     document.getElementById('filme-estreia').value       = '';
 }
 
+// Preenche o formulário com os dados do filme para edição
+function editarFilme(id) {
+    const filmes = JSON.parse(localStorage.getItem('filmes') || '[]');
+    const filme = filmes.find(f => f.id === id);
+    if (!filme) return;
+
+    document.getElementById('filme-id').value           = filme.id;
+    document.getElementById('filme-titulo').value        = filme.titulo;
+    document.getElementById('filme-genero').value        = filme.genero;
+    document.getElementById('filme-descricao').value     = filme.descricao;
+    document.getElementById('filme-classificacao').value = filme.classificacao;
+    document.getElementById('filme-duracao').value       = filme.duracao;
+    document.getElementById('filme-estreia').value       = filme.estreia;
+}
+
+// Exclui um filme e suas sessões e ingressos relacionados
 function excluirFilme(id) {
     const sessoes   = JSON.parse(localStorage.getItem('sessoes')   || '[]');
     const ingressos = JSON.parse(localStorage.getItem('ingressos') || '[]');
@@ -105,6 +140,7 @@ function excluirFilme(id) {
     renderFilmes();
 }
 
+// Renderiza a tabela de filmes na página
 function renderFilmes() {
     const lista = document.getElementById('lista-filmes');
     const count = document.getElementById('filmes-count');
@@ -130,7 +166,10 @@ function renderFilmes() {
         html += '<td><span class="badge bg-warning text-dark">' + f.classificacao + '</span></td>';
         html += '<td>' + f.duracao + ' min</td>';
         html += '<td>' + estreia + '</td>';
-        html += '<td><button class="btn btn-danger btn-sm" onclick="excluirFilme(\'' + f.id + '\')">Excluir</button></td>';
+        html += '<td>';
+        html += '<button class="btn btn-warning btn-sm me-1" onclick="editarFilme(\'' + f.id + '\')">Editar</button>';
+        html += '<button class="btn btn-danger btn-sm" onclick="excluirFilme(\'' + f.id + '\')">Excluir</button>';
+        html += '</td>';
         html += '</tr>';
     }
     html += '</tbody></table>';
@@ -142,30 +181,58 @@ function renderFilmes() {
 //  SALAS — chave localStorage: 'salas'
 // ============================================================
 
+// Salva uma nova sala ou edita uma existente baseado no campo 'sala-id'
 function salvarSala() {
+    const id         = document.getElementById('sala-id').value;
     const nome       = document.getElementById('sala-nome').value.trim();
     const capacidade = document.getElementById('sala-capacidade').value;
     const tipo       = document.getElementById('sala-tipo').value;
 
+    // Validações dos campos obrigatórios
     if (!nome)                                  { mostrarAlerta('alerta-salas', 'Informe o nome da sala.', 'danger'); return; }
     if (!capacidade || Number(capacidade) <= 0) { mostrarAlerta('alerta-salas', 'Informe a capacidade.', 'danger'); return; }
     if (!tipo)                                  { mostrarAlerta('alerta-salas', 'Selecione o tipo da sala.', 'danger'); return; }
 
     const salas = JSON.parse(localStorage.getItem('salas') || '[]');
-    salas.push({ id: gerarId(), nome, capacidade: Number(capacidade), tipo });
+    if (id) {
+        // Editar sala existente
+        const index = salas.findIndex(s => s.id === id);
+        if (index !== -1) {
+            salas[index] = { id, nome, capacidade: Number(capacidade), tipo };
+            mostrarAlerta('alerta-salas', 'Sala "' + nome + '" atualizada com sucesso!', 'success');
+        }
+    } else {
+        // Adicionar nova sala
+        salas.push({ id: gerarId(), nome, capacidade: Number(capacidade), tipo });
+        mostrarAlerta('alerta-salas', 'Sala "' + nome + '" salva com sucesso!', 'success');
+    }
     localStorage.setItem('salas', JSON.stringify(salas));
 
-    mostrarAlerta('alerta-salas', 'Sala "' + nome + '" salva com sucesso!', 'success');
     limparFormSala();
     renderSalas();
 }
 
+// Limpa todos os campos do formulário de salas
 function limparFormSala() {
+    document.getElementById('sala-id').value         = '';
     document.getElementById('sala-nome').value       = '';
     document.getElementById('sala-capacidade').value = '';
     document.getElementById('sala-tipo').value       = '';
 }
 
+// Preenche o formulário com os dados da sala para edição
+function editarSala(id) {
+    const salas = JSON.parse(localStorage.getItem('salas') || '[]');
+    const sala = salas.find(s => s.id === id);
+    if (!sala) return;
+
+    document.getElementById('sala-id').value         = sala.id;
+    document.getElementById('sala-nome').value       = sala.nome;
+    document.getElementById('sala-capacidade').value = sala.capacidade;
+    document.getElementById('sala-tipo').value       = sala.tipo;
+}
+
+// Exclui uma sala e suas sessões e ingressos relacionados
 function excluirSala(id) {
     const sessoes   = JSON.parse(localStorage.getItem('sessoes')   || '[]');
     const ingressos = JSON.parse(localStorage.getItem('ingressos') || '[]');
@@ -190,6 +257,7 @@ function excluirSala(id) {
     renderSalas();
 }
 
+// Renderiza a tabela de salas na página
 function renderSalas() {
     const lista = document.getElementById('lista-salas');
     const count = document.getElementById('salas-count');
@@ -213,7 +281,10 @@ function renderSalas() {
         html += '<td><strong>' + s.nome + '</strong></td>';
         html += '<td>' + s.capacidade + ' lugares</td>';
         html += '<td><span class="badge ' + cor + '">' + s.tipo + '</span></td>';
-        html += '<td><button class="btn btn-danger btn-sm" onclick="excluirSala(\'' + s.id + '\')">Excluir</button></td>';
+        html += '<td>';
+        html += '<button class="btn btn-warning btn-sm me-1" onclick="editarSala(\'' + s.id + '\')">Editar</button>';
+        html += '<button class="btn btn-danger btn-sm" onclick="excluirSala(\'' + s.id + '\')">Excluir</button>';
+        html += '</td>';
         html += '</tr>';
     }
     html += '</tbody></table>';
@@ -225,6 +296,7 @@ function renderSalas() {
 //  SESSÕES — chave localStorage: 'sessoes'
 // ============================================================
 
+// Carrega opções de filmes no select especificado
 function carregarSelectFilmes(selectId) {
     const sel = document.getElementById(selectId);
     if (!sel) return;
@@ -238,6 +310,7 @@ function carregarSelectFilmes(selectId) {
     }
 }
 
+// Carrega opções de salas no select especificado
 function carregarSelectSalas(selectId) {
     const sel = document.getElementById(selectId);
     if (!sel) return;
@@ -251,6 +324,7 @@ function carregarSelectSalas(selectId) {
     }
 }
 
+// Carrega opções de sessões no select especificado
 function carregarSelectSessoes(selectId) {
     const sel     = document.getElementById(selectId);
     if (!sel) return;
@@ -269,7 +343,9 @@ function carregarSelectSessoes(selectId) {
     }
 }
 
+// Salva uma nova sessão ou edita uma existente baseado no campo 'sessao-id'
 function salvarSessao() {
+    const id       = document.getElementById('sessao-id').value;
     const filmeId  = document.getElementById('sessao-filme').value;
     const salaId   = document.getElementById('sessao-sala').value;
     const dataHora = document.getElementById('sessao-datahora').value;
@@ -277,6 +353,7 @@ function salvarSessao() {
     const idioma   = document.getElementById('sessao-idioma').value;
     const formato  = document.getElementById('sessao-formato').value;
 
+    // Validações dos campos obrigatórios
     if (!filmeId)                          { mostrarAlerta('alerta-sessoes', 'Selecione um filme.', 'danger'); return; }
     if (!salaId)                           { mostrarAlerta('alerta-sessoes', 'Selecione uma sala.', 'danger'); return; }
     if (!dataHora)                         { mostrarAlerta('alerta-sessoes', 'Informe a data e hora.', 'danger'); return; }
@@ -285,15 +362,27 @@ function salvarSessao() {
     if (!formato)                          { mostrarAlerta('alerta-sessoes', 'Selecione o formato.', 'danger'); return; }
 
     const sessoes = JSON.parse(localStorage.getItem('sessoes') || '[]');
-    sessoes.push({ id: gerarId(), filmeId, salaId, dataHora, preco: Number(preco), idioma, formato });
+    if (id) {
+        // Editar sessão existente
+        const index = sessoes.findIndex(s => s.id === id);
+        if (index !== -1) {
+            sessoes[index] = { id, filmeId, salaId, dataHora, preco: Number(preco), idioma, formato };
+            mostrarAlerta('alerta-sessoes', 'Sessão atualizada com sucesso!', 'success');
+        }
+    } else {
+        // Adicionar nova sessão
+        sessoes.push({ id: gerarId(), filmeId, salaId, dataHora, preco: Number(preco), idioma, formato });
+        mostrarAlerta('alerta-sessoes', 'Sessão salva com sucesso!', 'success');
+    }
     localStorage.setItem('sessoes', JSON.stringify(sessoes));
 
-    mostrarAlerta('alerta-sessoes', 'Sessão salva com sucesso!', 'success');
     limparFormSessao();
     renderSessoes();
 }
 
+// Limpa todos os campos do formulário de sessões
 function limparFormSessao() {
+    document.getElementById('sessao-id').value       = '';
     document.getElementById('sessao-filme').value    = '';
     document.getElementById('sessao-sala').value     = '';
     document.getElementById('sessao-datahora').value = '';
@@ -302,6 +391,22 @@ function limparFormSessao() {
     document.getElementById('sessao-formato').value  = '';
 }
 
+// Preenche o formulário com os dados da sessão para edição
+function editarSessao(id) {
+    const sessoes = JSON.parse(localStorage.getItem('sessoes') || '[]');
+    const sessao = sessoes.find(s => s.id === id);
+    if (!sessao) return;
+
+    document.getElementById('sessao-id').value       = sessao.id;
+    document.getElementById('sessao-filme').value    = sessao.filmeId;
+    document.getElementById('sessao-sala').value     = sessao.salaId;
+    document.getElementById('sessao-datahora').value = sessao.dataHora;
+    document.getElementById('sessao-preco').value    = sessao.preco;
+    document.getElementById('sessao-idioma').value   = sessao.idioma;
+    document.getElementById('sessao-formato').value  = sessao.formato;
+}
+
+// Exclui uma sessão e seus ingressos relacionados
 function excluirSessao(id) {
     const ingressos = JSON.parse(localStorage.getItem('ingressos') || '[]');
     const nIng = ingressos.filter(i => i.sessaoId === id).length;
@@ -315,6 +420,7 @@ function excluirSessao(id) {
     renderSessoes();
 }
 
+// Renderiza a tabela de sessões na página
 function renderSessoes() {
     const lista = document.getElementById('lista-sessoes');
     const count = document.getElementById('sessoes-count');
@@ -344,7 +450,10 @@ function renderSessoes() {
         html += '<td>' + formatarMoeda(s.preco) + '</td>';
         html += '<td><span class="badge bg-secondary">' + s.idioma + '</span></td>';
         html += '<td><span class="badge bg-info text-dark">' + s.formato + '</span></td>';
-        html += '<td><button class="btn btn-danger btn-sm" onclick="excluirSessao(\'' + s.id + '\')">Excluir</button></td>';
+        html += '<td>';
+        html += '<button class="btn btn-warning btn-sm me-1" onclick="editarSessao(\'' + s.id + '\')">Editar</button>';
+        html += '<button class="btn btn-danger btn-sm" onclick="excluirSessao(\'' + s.id + '\')">Excluir</button>';
+        html += '</td>';
         html += '</tr>';
     }
     html += '</tbody></table>';
@@ -356,11 +465,14 @@ function renderSessoes() {
 //  INGRESSOS — chave localStorage: 'ingressos'
 // ============================================================
 
+// Limpa o campo de assento quando a sessão muda
 function onSessaoChange() {
     document.getElementById('ingresso-assento').value = '';
 }
 
+// Salva um novo ingresso ou edita um existente baseado no campo 'ingresso-id'
 function salvarIngresso() {
+    const id        = document.getElementById('ingresso-id').value;
     const sessaoId  = document.getElementById('ingresso-sessao').value;
     const nome      = document.getElementById('ingresso-nome').value.trim();
     const cpf       = document.getElementById('ingresso-cpf').value.trim();
@@ -369,6 +481,7 @@ function salvarIngresso() {
     const tipoEl    = document.querySelector('input[name="ingresso-tipo"]:checked');
     const tipo      = tipoEl ? tipoEl.value : 'Inteira';
 
+    // Validações dos campos obrigatórios
     if (!sessaoId)  { mostrarAlerta('alerta-ingressos', 'Selecione uma sessão.', 'danger'); return; }
     if (!nome)      { mostrarAlerta('alerta-ingressos', 'Informe o nome do cliente.', 'danger'); return; }
     if (!cpf)       { mostrarAlerta('alerta-ingressos', 'Informe o CPF.', 'danger'); return; }
@@ -378,7 +491,8 @@ function salvarIngresso() {
 
     const ingressos = JSON.parse(localStorage.getItem('ingressos') || '[]');
 
-    if (ingressos.some(i => i.sessaoId === sessaoId && i.assento === assento)) {
+    // Verifica se o assento já está ocupado
+    if (ingressos.some(i => i.id !== id && i.sessaoId === sessaoId && i.assento === assento)) {
         mostrarAlerta('alerta-ingressos', 'Assento ' + assento + ' já está ocupado nesta sessão.', 'danger');
         return;
     }
@@ -388,25 +502,47 @@ function salvarIngresso() {
     const precoBase = sessao ? sessao.preco : 0;
     const valorPago = tipo === 'Meia' ? precoBase / 2 : precoBase;
 
-    ingressos.push({
-        id: gerarId(),
-        sessaoId,
-        nome,
-        cpf,
-        assento,
-        tipo,
-        valorPago,
-        pagamento,
-        vendaEm: new Date().toISOString()
-    });
+    if (id) {
+        // Editar ingresso existente
+        const index = ingressos.findIndex(i => i.id === id);
+        if (index !== -1) {
+            ingressos[index] = {
+                id,
+                sessaoId,
+                nome,
+                cpf,
+                assento,
+                tipo,
+                valorPago,
+                pagamento,
+                vendaEm: ingressos[index].vendaEm // Manter a data original
+            };
+            mostrarAlerta('alerta-ingressos', 'Ingresso atualizado para ' + nome + ' — Assento ' + assento + '.', 'success');
+        }
+    } else {
+        // Adicionar novo ingresso
+        ingressos.push({
+            id: gerarId(),
+            sessaoId,
+            nome,
+            cpf,
+            assento,
+            tipo,
+            valorPago,
+            pagamento,
+            vendaEm: new Date().toISOString()
+        });
+        mostrarAlerta('alerta-ingressos', 'Ingresso vendido para ' + nome + ' — Assento ' + assento + ' (' + tipo + ' — ' + formatarMoeda(valorPago) + ').', 'success');
+    }
 
     localStorage.setItem('ingressos', JSON.stringify(ingressos));
-    mostrarAlerta('alerta-ingressos', 'Ingresso vendido para ' + nome + ' — Assento ' + assento + ' (' + tipo + ' — ' + formatarMoeda(valorPago) + ').', 'success');
     limparFormIngresso();
     renderIngressos();
 }
 
+// Limpa todos os campos do formulário de ingressos
 function limparFormIngresso() {
+    document.getElementById('ingresso-id').value       = '';
     document.getElementById('ingresso-sessao').value    = '';
     document.getElementById('ingresso-nome').value      = '';
     document.getElementById('ingresso-cpf').value       = '';
@@ -416,6 +552,23 @@ function limparFormIngresso() {
     if (inteira) inteira.checked = true;
 }
 
+// Preenche o formulário com os dados do ingresso para edição
+function editarIngresso(id) {
+    const ingressos = JSON.parse(localStorage.getItem('ingressos') || '[]');
+    const ingresso = ingressos.find(i => i.id === id);
+    if (!ingresso) return;
+
+    document.getElementById('ingresso-id').value       = ingresso.id;
+    document.getElementById('ingresso-sessao').value    = ingresso.sessaoId;
+    document.getElementById('ingresso-nome').value      = ingresso.nome;
+    document.getElementById('ingresso-cpf').value       = ingresso.cpf;
+    document.getElementById('ingresso-assento').value   = ingresso.assento;
+    document.getElementById('ingresso-pagamento').value = ingresso.pagamento;
+    const tipoRadio = document.querySelector('input[name="ingresso-tipo"][value="' + ingresso.tipo + '"]');
+    if (tipoRadio) tipoRadio.checked = true;
+}
+
+// Cancela um ingresso (exclusão)
 function excluirIngresso(id) {
     if (!confirm('Cancelar este ingresso?')) return;
     const ingressos = JSON.parse(localStorage.getItem('ingressos') || '[]');
@@ -424,6 +577,7 @@ function excluirIngresso(id) {
     renderIngressos();
 }
 
+// Renderiza a tabela de ingressos na página
 function renderIngressos() {
     const lista = document.getElementById('lista-ingressos');
     const count = document.getElementById('ingressos-count');
@@ -456,7 +610,10 @@ function renderIngressos() {
         html += '<td><span class="badge ' + tipoCor + '">' + ing.tipo + '</span></td>';
         html += '<td><small>' + formatarMoeda(ing.valorPago) + '</small></td>';
         html += '<td><small>' + ing.pagamento + '</small></td>';
-        html += '<td><button class="btn btn-danger btn-sm" onclick="excluirIngresso(\'' + ing.id + '\')">Cancelar</button></td>';
+        html += '<td>';
+        html += '<button class="btn btn-warning btn-sm me-1" onclick="editarIngresso(\'' + ing.id + '\')">Editar</button>';
+        html += '<button class="btn btn-danger btn-sm" onclick="excluirIngresso(\'' + ing.id + '\')">Cancelar</button>';
+        html += '</td>';
         html += '</tr>';
     }
     html += '</tbody></table>';
@@ -468,12 +625,14 @@ function renderIngressos() {
 //  SESSÕES DISPONÍVEIS (sessoes-disponiveis.html)
 // ============================================================
 
+// Obtém a fonte do poster do filme (padrão ou salvo)
 function getPosterSrc(filme) {
     if (POSTERS[filme.titulo]) return POSTERS[filme.titulo];
     const salvo = localStorage.getItem('poster_' + filme.id);
     return salvo || null;
 }
 
+// Faz upload de um poster para um filme específico
 function uploadPosterCard(input, filmeId) {
     if (!input.files || !input.files[0]) return;
     const reader = new FileReader();
@@ -490,12 +649,13 @@ function uploadPosterCard(input, filmeId) {
     reader.readAsDataURL(input.files[0]);
 }
 
+// Renderiza as sessões disponíveis agrupadas por filme
 function renderSessoesDisponiveis() {
     const lista   = document.getElementById('lista-sessoes-disp');
     const spinner = document.getElementById('spinner-filmes');
     if (!lista) return;
 
-    // Spinner sempre escondido — não há requisições assíncronas
+    // Esconde o spinner (não há requisições assíncronas)
     if (spinner) spinner.style.display = 'none';
 
     const sessoes   = JSON.parse(localStorage.getItem('sessoes')   || '[]');
@@ -578,6 +738,7 @@ function renderSessoesDisponiveis() {
 //  PÁGINA INICIAL (cinema.html)
 // ============================================================
 
+// Renderiza o resumo de contadores na página inicial
 function renderResumoHome() {
     const chaves = { filmes: 'count-filmes', salas: 'count-salas', sessoes: 'count-sessoes', ingressos: 'count-ingressos' };
     for (const key in chaves) {
@@ -586,6 +747,7 @@ function renderResumoHome() {
     }
 }
 
+// Renderiza a tabela de sessões na página inicial
 function renderSessoesHome() {
     const lista = document.getElementById('lista-sessoes-home');
     if (!lista) return;
@@ -631,22 +793,27 @@ function renderSessoesHome() {
 //  INICIALIZAÇÃO
 // ============================================================
 
+// Evento onload da janela para inicializar as páginas conforme necessário
 window.onload = () => {
 
+    // Inicializa a página de filmes
     if (document.getElementById('lista-filmes')) {
         renderFilmes();
     }
 
+    // Inicializa a página de salas
     if (document.getElementById('lista-salas')) {
         renderSalas();
     }
 
+    // Inicializa a página de sessões
     if (document.getElementById('lista-sessoes')) {
         carregarSelectFilmes('sessao-filme');
         carregarSelectSalas('sessao-sala');
         renderSessoes();
     }
 
+    // Inicializa a página de ingressos
     if (document.getElementById('lista-ingressos')) {
         carregarSelectSessoes('ingresso-sessao');
         renderIngressos();
@@ -657,10 +824,12 @@ window.onload = () => {
         }
     }
 
+    // Inicializa a página de sessões disponíveis
     if (document.getElementById('lista-sessoes-disp')) {
         renderSessoesDisponiveis();
     }
 
+    // Inicializa a página inicial (cinema.html)
     if (document.getElementById('count-filmes')) {
         renderResumoHome();
         renderSessoesHome();
